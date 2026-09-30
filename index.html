@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
+</head>
+<body>
+    <a-scene>
+        <a-camera>
+            <a-cursor fuse="true" fuse-timeout="1000" color="black"></a-cursor>
+        </a-camera>
+
+        <a-sky color="#ECECEC"></a-sky>
+        <a-plane rotation="-90 0 0" width="20" height="20" color="#7BC8A4"></a-plane>
+
+        <a-box id="box" position="0 1 -5" color="#00FF55"></a-box>
+        <a-sphere id="sphere" position="2 1 -5" color="#FF5733"></a-sphere>
+        <a-cone id="cone" color="blue" radius-bottom="1" radius-top="0.1" height="1.5" position="0 1 -4"></a-cone>
+    </a-scene>
+
+    <script>
+        const scene = document.querySelector('a-scene');
+        const box = document.querySelector('#box');
+        const sphere = document.querySelector("#sphere");
+        const cone = document.querySelector("#cone");
+
+        const rand = (min, max) => min + Math.random() * (max - min);
+        
+        // Track look timers and destroyed states individually
+        let timers = { box: null, sphere: null, cone: null };
+        let destroyedStates = { box: false, sphere: false, cone: false };
+
+        function moveToRandom(element) {
+            if (destroyedStates[element.id]) return;
+
+            element.setAttribute('animation', {
+                property: 'position',
+                to: `${rand(-4, 4)} ${rand(0.5, 4)} ${rand(-6, -2)}`,
+                dur: 2000,
+                easing: 'easeInOutQuad'
+            });
+        }
+
+        // Reusable function to manage gaze behaviors
+        function setupGazeBehavior(element) {
+            element.addEventListener('mouseenter', () => {
+                if (destroyedStates[element.id]) return;
+                
+                timers[element.id] = setTimeout(() => {
+                    handleDestruction(element);
+                }, 2000);
+            });
+
+            element.addEventListener('mouseleave', () => {
+                clearTimeout(timers[element.id]);
+            });
+
+            element.addEventListener('animationcomplete', (e) => {
+                if (e.detail.name === 'animation') {
+                    moveToRandom(element);
+                }
+            });
+        }
+
+        function handleDestruction(element) {
+            destroyedStates[element.id] = true;
+            element.removeAttribute('animation');
+
+            if (element.id === 'cone') {
+                // The cone expands like a heavy shockwave explosion
+                element.setAttribute('color', '#FF4500'); // Change to bomb orange-red
+                element.setAttribute('animation__bomb', {
+                    property: 'scale',
+                    to: '8 8 8', // Massive bomb blast wave
+                    dur: 250,
+                    easing: 'easeOutExpo'
+                });
+                
+                setTimeout(() => {
+                    element.setAttribute('visible', false);
+                }, 250);
+            } else {
+                // The square and sphere instantly disappear clean
+                element.setAttribute('visible', false);
+            }
+        }
+
+        // Initialize the behaviors
+        setupGazeBehavior(box);
+        setupGazeBehavior(sphere);
+        setupGazeBehavior(cone);
+
+        if (scene.hasLoaded) {
+            startAll();
+        } else {
+            scene.addEventListener('loaded', startAll);
+        }
+
+        function startAll() {
+            moveToRandom(box);
+            moveToRandom(sphere);
+            moveToRandom(cone);
+        }
+    </script>
+</body>
+</html>
