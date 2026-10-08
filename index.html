@@ -6,7 +6,6 @@
 <body>
     <a-assets>
         <audio id="wind" src="sound1.mp3" preload="auto"></audio>
-        <!-- FIX: Removed space from asset ID to keep selectors clean -->
         <audio id="bgm-asset" src="the_mountain-retro-game-593063.mp3" preload="auto"></audio>
     </a-assets>
 
@@ -17,12 +16,10 @@
 
         <a-sky color="#ECECEC"></a-sky>
         
-        <!-- FIX: Added the 'music' ID here so the bypass script below can find it and start it automatically -->
         
 
         <a-plane rotation="-90 0 0" width="20" height="20" color="#7BC8A4"></a-plane>
 
-        <!-- FIX: Changed 'on: ;' to 'on: click;' so the sound plays when you click it -->
         <a-box id="box" position="-2 1.5 -5" color="#00FF55" sound="src: #wind; on: click; volume: 1;"></a-box>
         
         <a-sphere id="sphere" position="0 1.5 -5" color="#FF5733"></a-sphere>
@@ -40,7 +37,6 @@
           }
         };
 
-        // Fires automatically on your first movement over the screen
         scene.addEventListener('mousemove', startMusic, { once: true });
         window.addEventListener('touchstart', startMusic, { once: true });
       });
