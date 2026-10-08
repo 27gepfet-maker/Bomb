@@ -5,11 +5,11 @@
 </head>
 <body>
     <a-assets>
-        <audio id="wind" src="sound1.mp3" preload="auto"></audio>
-        <audio id="backroundmusic" src="the_mountain-retro-game-593063.mp3" preload="auto"></audio>
+        <audio id="wind" src="sound1.mp3; preload=auto"></audio>
+        <audio id="backroundmusic" src="the_mountain-retro-game-593063.mp3; preload=auto"></audio>
       
     </a-assets>
- <-a entity id="music" sound="src:backroundmusic; loop: true; volume: 0.4;"></a-entity>
+ <-a entity id="music" sound="src:#backroundmusic; loop: true; volume: 0.4;"></a-entity>
     <a-scene>
         <a-camera>
             <a-cursor color="black"></a-cursor>
